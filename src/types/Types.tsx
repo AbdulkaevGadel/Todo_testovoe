@@ -1,6 +1,7 @@
 export type Task = {
-    name: string| null,
-    readinessStatus:boolean,
+    id: number;
+    name: string,
+    isCompleted:boolean,
 }
 
 export interface InitialState {

@@ -1,57 +1,79 @@
-import {FC} from "react";
-import {InitialState, Task} from "../../types/Types";
-import {useSelector} from "react-redux";
+import {FC, useState} from "react";
+import {Task} from "../../types/Types";
+import {useDispatch} from "react-redux";
 import styles from '../main/main.module.css'
+import {usersActions} from "../../redux/reducers/AllTodo_reducer";
 
 interface MainProps {
     allTodo: Task[]
 }
 
+const generateId = (todos: Task[]): number => {
+    let maxId = 0;
+
+    todos.forEach(todo => {
+        if (todo.id >= maxId) {
+            maxId = todo.id
+        }
+    })
+
+    return maxId + 1;
+}
 
 const Main: FC<MainProps> = (props) => {
+    const dispatch = useDispatch()
+    const [selectedTodoStatus, setSelectedTodoStatus] = useState<string>('all')
 
-    const todoElements = props.allTodo.map((task: Task) => {
-        return (
-            <div>
-                {task.readinessStatus && <div className={styles.red}> {task.name}</div>}
-                {task.readinessStatus || <div className={styles.blue}>{task.name}</div>}
-            </div>)
-    })
 
-    const unfulfilledTodoFilter = props.allTodo.filter((task: Task) => {
-        if(task.readinessStatus)
-        return task
-    })
+    const todoElements = props.allTodo
+        .filter((todo) => selectedTodoStatus === 'all'
+            || (selectedTodoStatus === 'completed' && todo.isCompleted)
+            || (selectedTodoStatus === 'active' && !todo.isCompleted))
+        .map((task: Task) => {
+            return (
+                <div>
+                    <form>
+                        <input id={task.id.toString()} checked={task.isCompleted} type="checkbox" onChange={(e) => {
+                            dispatch(usersActions.editTask({id: task.id, isCompleted: e.target.checked}))
 
-   const total:number = unfulfilledTodoFilter.length
+                        }}/>
+                        <label htmlFor={task.id.toString()}
+                               className={task.isCompleted ? styles.red : styles.blue}> {task.name}</label>
+                    </form>
+                </div>)
+        })
 
-    // console.log(unfulfilledTodo)
-
-    // const unfulfilledTodo = props.allTodo.map((task:Task) =>{
-    //     return (
-    //         <div>
-    //             {unfulfilledTodoFilter.length} items left
-    //         </div>
-    //     )
-    // })
-
+    const totalActive = props.allTodo.filter(todo => !todo.isCompleted).length
 
 
     return (
-        <div>
-            <form>
-                <input/>
-                {todoElements}
+        <div className={styles.wrapper}>
+            TODOS
+            <input placeholder='What needs to be done?' onKeyPress={(e) => {
+
+                if (e.key === 'Enter') {
+                    dispatch(usersActions.addTodo({
+                        id: generateId(props.allTodo),
+                        name: e.currentTarget.value,
+                        isCompleted: false
+                    }))
+
+                    e.currentTarget.value = ""
+                }
+            }}/>
+            {todoElements}
+            <div>
+                {totalActive} items left
                 <div>
-                    {total} items left
-                <div>
-                    <button></button>
-                    <button></button>
-                    <button></button>
-                    <button></button>
+                    <button type='button' onClick={() => setSelectedTodoStatus('all')}>all</button>
+                    <button type='button' onClick={() => setSelectedTodoStatus('active')}>active</button>
+                    <button type='button' onClick={() => setSelectedTodoStatus('completed')}>completed</button>
+                    <button type='button' onClick={() => {
+                        dispatch(usersActions.deleteTasks(props.allTodo))
+                    }}>clear completed
+                    </button>
                 </div>
-                </div>
-            </form>
+            </div>
         </div>
     )
 }
