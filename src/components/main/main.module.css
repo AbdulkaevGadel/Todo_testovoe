@@ -1,12 +1,129 @@
-.red{
-    color:red;
-}
-
-.blue {
-    color: blue;
-}
-
 .wrapper {
     display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    gap: 20px;
+    padding-top: 30px;
 
+}
+
+.todo_container {
+    border: 1px solid #ededed;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: white;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    color: #e9d9d8;
+    font-size: 70px;
+}
+
+.taskItem {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    background: white;
+}
+
+
+/* Скрытие нативного чекбокса */
+.taskItem input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Кастомный чекбокс */
+.taskItem label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    padding-left: 35px;
+    min-height: 24px;
+    font-size: 24px;
+}
+
+/* Круг чекбокса */
+.taskItem label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    background: white;
+    transition: all 0.2s;
+}
+
+/* Галочка чекбокса */
+.taskItem input:checked + label::after {
+    content: "✓";
+    position: absolute;
+    left: 7px;
+    top: 2px;
+    color: #5dc2af;
+    font-size: 16px;
+}
+
+/* Стили для выполненной задачи */
+.taskItem input:checked + label {
+    color: #d9d9d9;
+    text-decoration: line-through;
+}
+
+
+/* Состояния при наведении */
+.taskItem label:hover::before {
+    border-color: #5dc2af;
+}
+
+.wrapper_footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 80px;
+    padding: 20px;
+}
+
+.wrapper_input_border {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.wrapper_button {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Общие стили кнопок */
+.filter_btn {
+    padding: 3px 7px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    background: none;
+    color: #777;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+/* Стиль при наведении */
+.filter_btn:hover {
+    border-color: #f2e5e5;
+    background: #f5f5f5;
+    color: #333;
+}
+
+/* Стиль активной кнопки */
+.filter_btn.active {
+    border-color: #efd5d5;
+    background: #f5f5f5;
+    color: #333;
 }

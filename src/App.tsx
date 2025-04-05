@@ -6,11 +6,9 @@ import {selectUsersState} from "./selectors/selectors";
 import {Task} from "./types/Types";
 
 
-
 function App() {
 
-    const allTodo:Task[] = useSelector(selectUsersState)
-
+    const allTodo: Task[] = useSelector(selectUsersState)
 
     return (
         <div>

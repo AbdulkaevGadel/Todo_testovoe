@@ -24,7 +24,7 @@ export const usersSlice = createSlice({
         },
         deleteTasks :(state) =>{
             state.allTodo = state.allTodo.filter(task => !task.isCompleted)
-        }
+        },
 
     }
 });
